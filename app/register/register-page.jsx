@@ -1,10 +1,28 @@
-import React from "react";
+"use client";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const RegisterPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [rePassowrd, setRePassword] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Perform any form validation or API calls here
+    if (!password) {
+      console.log("Password is required");
+    } else if (password !== rePassowrd) {
+      console.log("Password is not matching..!");
+    } else {
+      router.push("/login");
+    }
+  };
   return (
     <div className="w-[380px] mx-auto">
       <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-4">
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           {/* Title */}
           <h3 className="text-center text-xl font-semibold text-gray-900">
             Register an Account
@@ -16,13 +34,15 @@ const RegisterPage = () => {
               htmlFor="email"
               className="text-sm font-medium text-gray-900 block mb-2 "
             >
-              Your Email
+              Enter Your Email
             </label>
             <input
               type="email"
               name="email"
               id="email"
               placeholder="yourname@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
           </div>
@@ -33,40 +53,36 @@ const RegisterPage = () => {
               htmlFor="password"
               className="text-sm font-medium text-gray-900 block mb-2 "
             >
-              Your Password
+              Enter Your Password
             </label>
             <input
               type="password"
               name="password"
               id="password"
               placeholder="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
           </div>
 
-          {/* remember me */}
-          <div className="flex justify-between">
-            <div className="flex items-start">
-              <div className="flex items-center h-5">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  className="bg-gray-50 border border-gray-300 focus: ring-3 focus:ring-blue-300 h-4 w-4 rounded"
-                />
-              </div>
-
-              <div className="text-sm ml-3">
-                <label htmlFor="remember" className="font-medium text-gra-900">
-                  Remember me
-                </label>
-              </div>
-            </div>
-            <a
-              href="/forget-password"
-              className="text-sm text-blue-700 hover:underline font-medium"
+          {/* Re-type Password */}
+          <div>
+            <label
+              htmlFor="rePassword"
+              className="text-sm font-medium text-gray-900 block mb-2 "
             >
-              Lost Password?
-            </a>
+              Re-Enter your password
+            </label>
+            <input
+              type="rePassword"
+              name="rePassword"
+              id="rePassword"
+              placeholder="Re-type password"
+              value={rePassowrd}
+              onChange={(e) => setRePassword(e.target.value)}
+              className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+            />
           </div>
 
           {/* submit button */}
@@ -74,17 +90,8 @@ const RegisterPage = () => {
             type="submit"
             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
           >
-            Sign In
+            Create
           </button>
-
-          {/* Dont have account */}
-
-          <div className="flex justify-center text-sm font-medium text-gray-500 space-x-1">
-            <span>Not registerd?</span>
-            <a href="/register" className="text-blue-700 hover:underline">
-              Create an account
-            </a>
-          </div>
         </form>
       </div>
     </div>
