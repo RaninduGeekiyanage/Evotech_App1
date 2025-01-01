@@ -8,11 +8,38 @@ export default function LoginForm() {
   // setter functions for input fields
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  // form validation using basic java script
+  const validateForm = () => {
+    if (!email) {
+      //set error message to setter function -> setEmailError
+      setEmailError("Email is required..!");
+      return false; // if there is error formValidity is set False
+    } else {
+      setEmailError(""); // if no errors then set error mrssage empty
+    }
+    if (!password) {
+      //set error message to setter function -> setEmailError
+      setPasswordError("Password is required..!");
+      return false; // if there is error formValidity is set False (return)
+    } else {
+      setPasswordError(""); // if no errors then set error mrssage empty
+    }
+
+    return true; // if there is no errors then formVlaidity is set True (isValid = true)
+  };
 
   //   submit function
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data", { email: email, passowrd: password });
+    const isValid = validateForm();
+    //check the formValidation is valid then form submittion continue
+    if (isValid) {
+      //Below this line - Login form data submission
+      console.log("Form Data", { email: email, passowrd: password });
+    }
   };
 
   return (
@@ -41,6 +68,10 @@ export default function LoginForm() {
               placeholder="yourname@email.com"
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
+            {/* Email error message */}
+            {emailError && (
+              <div className="text-red-600 text-sm mt-1">{emailError}</div>
+            )}
           </div>
 
           {/* Password */}
@@ -60,6 +91,11 @@ export default function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
             />
+
+            {/* Password error message -> if there is passworderror then render password error to the div */}
+            {passwordError && (
+              <div className="text-red-600 text-sm mt-1">{passwordError}</div>
+            )}
           </div>
 
           {/* remember me */}

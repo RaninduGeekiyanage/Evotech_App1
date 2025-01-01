@@ -11,11 +11,16 @@ const RegisterPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Perform any form validation or API calls here
-    if (!password) {
+    if (!email) {
+      alert("Email is required");
+    } else if (!password) {
       console.log("Password is required");
+      alert("Password is required");
     } else if (password !== rePassowrd) {
       console.log("Password is not matching..!");
+      alert("Password is not matching..!");
     } else {
+      alert("Account successfully created");
       router.push("/login");
     }
   };
