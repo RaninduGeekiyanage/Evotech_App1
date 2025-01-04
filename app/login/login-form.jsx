@@ -3,6 +3,7 @@ import Link from "next/link";
 //Client component for CSR
 
 import { useState } from "react";
+import { loginUser } from "../libs/apis/server";
 
 export default function LoginForm() {
   // setter functions for input fields
@@ -32,13 +33,18 @@ export default function LoginForm() {
   };
 
   //   submit function
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validateForm();
     //check the formValidation is valid then form submittion continue
     if (isValid) {
       //Below this line - Login form data submission
-      console.log("Form Data", { email: email, passowrd: password });
+      // console.log("Form Data", { email: email, passowrd: password });
+
+      // calling the loginUser server action
+      const login = await loginUser({ email: email, password: password }); // pass the user data in to server action -> loginUser
+
+      console.log("LOGIN RESPONSE", login);
     }
   };
 
