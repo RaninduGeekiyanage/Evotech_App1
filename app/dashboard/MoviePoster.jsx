@@ -22,6 +22,7 @@ export default function MoviePoster({ posterUrl, title }) {
       height={400}
       className="h-full w-auto object-contain"
       onError={() => setHasError(true)} // Set error state if loading fails
+      priority={true}
     />
   );
 }

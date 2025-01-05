@@ -24,7 +24,7 @@ export const GET = async (req) => {
       .collection("movies")
       .find({})
       .sort({ metacritic: -1 })
-      .limit(10)
+      .limit(8)
       .toArray();
 
     // console.log("MOnGO MFLIX MOVIES:: ", movies);
