@@ -1,21 +1,40 @@
+import clientPromise from "@/app/libs/mongodb";
 import { NextResponse } from "next/server";
 
-//create dummy array befor connect to mongo db
-
-const MOVIES = [
-  { id: 1, title: "Movie 1" },
-  { id: 2, title: "Movie 2" },
-  { id: 3, title: "Movie 3" },
-  { id: 4, title: "Movie 4" },
-  { id: 5, title: "Movie 5" },
-  { id: 6, title: "Movie 6" },
-  { id: 7, title: "Movie 7" },
-  { id: 8, title: "Movie 8" },
-  { id: 9, title: "Movie 9" },
-  { id: 10, title: "Movie 10" },
-];
-
-// create dummy route
 export const GET = async (req) => {
-  return NextResponse.json({ success: true, movies: MOVIES });
+  //Get movies from nongo db
+
+  try {
+    const client = await clientPromise();
+
+    if (!client) {
+      console.error("MongoClient not initialized");
+      throw new Error("MongoClient not initialized");
+    }
+
+    console.log("MongoClient initialized:", !!client);
+
+    //sample_mflix is the database name
+    const db = client.db("sample_mflix");
+
+    console.log("Database connection established");
+
+    //fetch the movies from database
+    const movies = await db
+      .collection("movies")
+      .find({})
+      .sort({ metacritic: -1 })
+      .limit(10)
+      .toArray();
+
+    // console.log("MOnGO MFLIX MOVIES:: ", movies);
+    // return NextResponse.json(movies);
+    return NextResponse.json({ movies });
+  } catch (error) {
+    console.error("MONGO DB ERROR: ", error.message, error.stack);
+    return NextResponse.json(
+      { error: "Internal Server Error", details: error.message },
+      { status: 500 }
+    );
+  }
 };

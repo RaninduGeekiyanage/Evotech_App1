@@ -1,11 +1,22 @@
 import React from "react";
 import { getMovies } from "../libs/apis/server";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Image from "next/image";
+import MoviePoster from "./MoviePoster";
 
 export default async function DashboardPage() {
-  //read the movies array response from end pont -> server action file to front end
-  const { movies } = await getMovies();
+  const response = await getMovies();
+  const moviesQuery = response?.movies || []; // Ensure movies is an array
 
-  // console.log("MOVIES::", movies);
+  console.log("MOVIES LIST::", moviesQuery);
+
   return (
     <main>
       {/* Navigation Bar */}
@@ -19,12 +30,33 @@ export default async function DashboardPage() {
       <div className="container mt-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {/* map the movie array to div as movie single element */}
-          {movies?.length &&
-            movies.map((movie) => (
-              <div key={movie.id} className="h-96 bg-yellow-300">
-                {movie?.title}
+          {moviesQuery.length > 0 ? (
+            moviesQuery.map((movie) => (
+              <div key={movie._id} className="h-96">
+                <Card className="h-full">
+                  <CardHeader>
+                    <CardTitle>{movie?.title}</CardTitle>
+                    <CardDescription className="sr-only">
+                      {movie?.title}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-center bg-black w-full h-[276px] mb-4 rounded">
+                      <MoviePoster
+                        posterUrl={movie?.poster}
+                        title={movie?.title}
+                      />
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <p>Card Footer</p>
+                  </CardFooter>
+                </Card>
               </div>
-            ))}
+            ))
+          ) : (
+            <p>No movies available</p>
+          )}
         </div>
       </div>
     </main>
