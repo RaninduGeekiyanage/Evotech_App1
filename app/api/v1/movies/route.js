@@ -1,7 +1,7 @@
 import clientPromise from "@/app/libs/mongodb";
 import { NextResponse } from "next/server";
 
-export const GET = async (req) => {
+export const GET = async () => {
   //Get movies from nongo db
 
   try {
