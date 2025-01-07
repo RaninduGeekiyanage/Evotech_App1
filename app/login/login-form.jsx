@@ -4,6 +4,8 @@ import Link from "next/link";
 
 import { useState } from "react";
 import { loginUser } from "../libs/apis/server";
+import { LuEye } from "react-icons/lu";
+import { LuEyeOff } from "react-icons/lu";
 
 export default function LoginForm() {
   // setter functions for input fields
@@ -11,6 +13,11 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
 
   // form validation using basic java script
   const validateForm = () => {
@@ -51,7 +58,7 @@ export default function LoginForm() {
   return (
     <div className="w-[380px] mx-auto">
       <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-4">
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6 font-sans" onSubmit={handleSubmit}>
           {/* Title */}
           <h3 className="text-center text-xl font-semibold text-gray-900">
             Sign in to Evotech
@@ -65,6 +72,7 @@ export default function LoginForm() {
             >
               Your Email
             </label>
+
             <input
               type="email"
               name="email"
@@ -74,6 +82,7 @@ export default function LoginForm() {
               placeholder="yourname@email.com"
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
+
             {/* Email error message */}
             {emailError && (
               <div className="text-red-600 text-sm mt-1">{emailError}</div>
@@ -84,20 +93,32 @@ export default function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-900 block mb-2 "
+              className="text-sm font-medium text-gray-900 block mb-2"
             >
               Your Password
             </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-            />
-
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                id="password"
+                placeholder="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-2 flex items-center"
+              >
+                {showPassword ? (
+                  <LuEyeOff className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <LuEye className="h-5 w-5 text-gray-500" />
+                )}
+              </button>
+            </div>
             {/* Password error message -> if there is passworderror then render password error to the div */}
             {passwordError && (
               <div className="text-red-600 text-sm mt-1">{passwordError}</div>
