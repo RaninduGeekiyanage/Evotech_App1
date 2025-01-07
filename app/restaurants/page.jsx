@@ -2,9 +2,9 @@ import React from "react";
 import { getRestaurants } from "../libs/apis/server";
 
 export default async function RestaurantPage() {
-  const { restaurants } = await getRestaurants();
+  // const { restaurants } = await getRestaurants();
 
-  console.log("RESTAURANTS:: ", restaurants);
+  // console.log("RESTAURANTS:: ", restaurants);
   return (
     <main>
       {/* Navigation Bar */}
