@@ -17,6 +17,9 @@ import { LuEyeOff } from "react-icons/lu";
 import Link from "next/link";
 import { useState } from "react";
 import { registerUser } from "@/app/libs/apis/server";
+import { useToast } from "@/hooks/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -29,6 +32,7 @@ export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { toast } = useToast();
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -55,9 +59,29 @@ export default function RegisterForm() {
         password,
       });
       setIsLoading(false);
+
       // if there is registerResponse Error, set it to setError setter function for rendering
       if (registerResponse.error) {
         setError({ error: true, message: registerResponse.error });
+      } else {
+        //success area. u can add iser interaction here after insert success
+        toast({
+          variant: "success",
+          title: (
+            <div className="flex flex-row">
+              Registration successful..{" "}
+              <span className="pl-2">
+                <FaRegThumbsUp className="text-green-400 h-4 w-4" />
+              </span>
+            </div>
+          ),
+          description: "Plese continue with login",
+          action: (
+            <ToastAction altText="login">
+              <Link href="/login">Login</Link>
+            </ToastAction>
+          ),
+        });
       }
       // console.log("Register Response:", registerResponse);
     } else {
@@ -173,7 +197,10 @@ export default function RegisterForm() {
 
               <div className="flex justify-center gap-1 text-xs">
                 Alredy Have an Account?{" "}
-                <Link href="/login" className="text-blue-600  hover:underline">
+                <Link
+                  href="/login"
+                  className="text-green-600  hover:underline font-semibold"
+                >
                   Sign In
                 </Link>
               </div>
