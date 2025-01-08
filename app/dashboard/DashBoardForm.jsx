@@ -40,12 +40,12 @@ export default function DashboardPage() {
   }, []); // Dependency array ensures it runs once on component mount
 
   return (
-    <main>
+    <main className="bg-custom-back bg-cover bg-center min-h-screen">
       {/* Navigation Bar */}
       <nav className="bg-gray-800 w-full h-25 flex justify-start items-center">
         <div className="container">
           <h1 className="font-bold text-4xl text-center text-gray-200 mt-2">
-            Download Mflix movies: High quality
+            Download Mflix High quality Movies
           </h1>
           <p className="text-center my-3 text-gray-300">
             Welcome to the official YTS.MX website. Here you can browse and{" "}
@@ -57,20 +57,25 @@ export default function DashboardPage() {
       </nav>
 
       {/* Body Section */}
-      <div className="container mt-8">
+      <div className="container mt-8 pb-10">
         {/* Display loading, error, or movie list */}
         {loading ? (
-          <p>Loading movies...</p>
+          <div className="flex justify-center items-center  bg-gray-600 pt-5 py-5 w-[400px] mx-auto rounded-lg">
+            <div className="h-8 w-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+            <span className="ml-3 text-gray-100 text-lg">
+              Loading movies...
+            </span>
+          </div>
         ) : error ? (
           <p className="text-red-500">{error}</p>
         ) : movies.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {movies.map((movie) => (
-              <div key={movie._id} className="h-[480px]">
-                <Card className="h-full">
+              <div key={movie._id} className="h-[500px] ">
+                <Card className="h-full bg-gray-900 border-8 border-gray-200 rounded-lg">
                   <CardHeader>
-                    <CardTitle>
-                      {movie?.title}
+                    <CardTitle className="text-neutral-300">
+                      {movie?.title}{" "}
                       <span className="text-sm text-neutral-400 font-normal">
                         - {movie?.year ?? "N/A"}
                       </span>
@@ -80,14 +85,16 @@ export default function DashboardPage() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex justify-center bg-black w-full h-[260px] mb-4 rounded">
+                    <div className="flex justify-center w-full h-[260px] mb-4 rounded">
                       <MoviePoster
                         posterUrl={movie?.poster}
                         title={movie?.title}
                       />
                     </div>
                     <div className="flex flex-col justify-between h-[125px]">
-                      <p className="line-clamp-3 text-xs">{movie?.plot}</p>
+                      <p className="line-clamp-3 text-xs text-neutral-300">
+                        {movie?.plot}
+                      </p>
                       <div className="text-blue-700 text-sm font-semibold">
                         {movie?.genres.length && movie?.genres?.join(" / ")}
                       </div>
@@ -113,7 +120,6 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   </CardContent>
-                  <CardFooter></CardFooter>
                 </Card>
               </div>
             ))}

@@ -14,6 +14,7 @@ export default function LoginForm() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loginSuccess, setLoginSuccess] = useState(false); // State for successful login
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -50,8 +51,12 @@ export default function LoginForm() {
 
       // calling the loginUser server action
       const login = await loginUser({ email: email, password: password }); // pass the user data in to server action -> loginUser
-
-      console.log("LOGIN RESPONSE", login);
+      if (login.success) {
+        setLoginSuccess(true); // Set login success to true
+        console.log("LOGIN RESPONSE", login);
+      } else {
+        // Handle login failure here (e.g., show error message)
+      }
     }
   };
 
@@ -61,7 +66,7 @@ export default function LoginForm() {
         <form className="space-y-6 font-sans" onSubmit={handleSubmit}>
           {/* Title */}
           <h3 className="text-center text-xl font-semibold text-gray-900">
-            Sign in to Evotech
+            Sign in to MFLix
           </h3>
 
           {/* Email */}
@@ -81,6 +86,7 @@ export default function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="yourname@email.com"
               className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              autoComplete="off"
             />
 
             {/* Email error message */}
@@ -151,12 +157,29 @@ export default function LoginForm() {
           </div>
 
           {/* submit button */}
-          <button
+          {/* <button
             type="submit"
             className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
           >
             Sign In
-          </button>
+          </button> */}
+          {loginSuccess ? (
+            <Link href="/dashboard">
+              <button
+                type="submit"
+                className="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-5"
+              >
+                Go to Dashboard
+              </button>
+            </Link>
+          ) : (
+            <button
+              type="submit"
+              className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+            >
+              Sign In
+            </button>
+          )}
 
           {/* Dont have account */}
 
