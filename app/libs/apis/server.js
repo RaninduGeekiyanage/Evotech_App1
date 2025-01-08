@@ -141,3 +141,32 @@ export const getRestaurants = async () => {
 // }
 
 
+export const registerUser = async (formData) => {
+  try {
+    //console.log("fromData", formData);
+    const response = await api.post("register", { json: formData });
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      return undefined;
+    }
+
+    // console.log("Registration Response", response);
+    // return await response.json();
+  } catch (error) {
+    // api end point responce capture here and set for frontend
+    const status = error?.response.status;
+    const responseBody = await error.response.json();
+    if (status && responseBody) {
+      // console.log("Registration Error", status);
+
+      if (status === 409) {
+        return responseBody;
+      }
+      return undefined;
+    }
+    return undefined;
+  }
+};
+

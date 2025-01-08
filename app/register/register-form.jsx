@@ -11,10 +11,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Label } from "@radix-ui/react-label";
 import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import Link from "next/link";
 import { useState } from "react";
+import { registerUser } from "@/app/libs/apis/server";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -23,41 +25,46 @@ const DEFAULT_ERROR = {
 
 //functional component
 export default function RegisterForm() {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
-  // const [confirmPassword, setConfirmPassword] = useState("");
-  // const [name, setName] = useState("");
   const [error, setError] = useState(DEFAULT_ERROR);
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
   };
-
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prev) => !prev);
   };
-
   const handleSubmitForm = async (event) => {
     event?.preventDefault();
-
     const formData = new FormData(event?.currentTarget);
-    const name = formData.get("name") ?? "";
-    const email = formData.get("email") ?? "";
-    const password = formData.get("password") ?? "";
+    const name = formData.get("name").toString() ?? "";
+    const email = formData.get("email").toString() ?? "";
+    const password = formData.get("password").toString() ?? "";
     const confirmPassword = formData.get("confirm-password") ?? "";
 
-    // console.log("submitted!", { name, email, password, confirmPassword });
-
-    if (name && email && password && confirmPassword) {
-      if (password === confirmPassword) {
-        setError(DEFAULT_ERROR);
-      } else {
-        setError({ error: true, message: "Password dosn't match..!" });
+    // if (name && email && password && confirmPassword) {
+    if (password === confirmPassword) {
+      setError(DEFAULT_ERROR);
+      setIsLoading(true);
+      //if response coming, call the registerUser ENd point
+      const registerResponse = await registerUser({
+        name,
+        email,
+        password,
+      });
+      setIsLoading(false);
+      // if there is registerResponse Error, set it to setError setter function for rendering
+      if (registerResponse.error) {
+        setError({ error: true, message: registerResponse.error });
       }
+      // console.log("Register Response:", registerResponse);
+    } else {
+      setError({ error: true, message: "Password dosn't match..!" });
     }
-    console.log("Error!", error);
+    // }
+    // console.log("Error!", error);
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -79,7 +86,7 @@ export default function RegisterForm() {
                   id="name"
                   name="name"
                   placeholder="Your Name"
-                  required={true}
+                  // required={true}
                 />
               </div>
 
@@ -91,7 +98,7 @@ export default function RegisterForm() {
                   id="email"
                   name="email"
                   placeholder="email@example.com"
-                  required={true}
+                  // required={true}
                 />
               </div>
 
@@ -173,7 +180,12 @@ export default function RegisterForm() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-center">
-            <Button className="flex-1" type="submit">
+            <Button
+              className="flex-1 text-green-400"
+              type="submit"
+              disabled={isLoading}
+            >
+              {isLoading && <Loader2 className="animate-spin" />}
               Register
             </Button>
           </CardFooter>
