@@ -1,4 +1,6 @@
-import { getMovies } from "../libs/apis/server";
+"use client";
+
+import { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -9,19 +11,38 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FaStar } from "react-icons/fa";
-// import Image from "next/image";
 import MoviePoster from "./MoviePoster";
+import { getMovies } from "@/app/libs/apis/server";
 
-export default async function DashboardPage() {
-  const response = await getMovies();
-  const moviesQuery = response?.movies || []; // Ensure movies is an array
+export default function DashboardPage() {
+  const [movies, setMovies] = useState([]); // State to store movies data
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
-  console.log("MOVIES LIST::", moviesQuery);
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        const response = await getMovies(); // Fetch movies from server
+        if (response?.error) {
+          setError(response.message || "Failed to load movies.");
+        } else {
+          setMovies(response.movies || []); // Update movies state
+        }
+      } catch (err) {
+        console.error("Error fetching movies:", err);
+        setError("An unexpected error occurred.");
+      } finally {
+        setLoading(false); // Set loading to false after fetching
+      }
+    };
+
+    fetchMovies(); // Call the fetch function
+  }, []); // Dependency array ensures it runs once on component mount
 
   return (
     <main>
       {/* Navigation Bar */}
-      <nav className="bg-gray-800 w-full h-25 flex justify-start items-center ">
+      <nav className="bg-gray-800 w-full h-25 flex justify-start items-center">
         <div className="container">
           <h1 className="font-bold text-4xl text-center text-gray-200 mt-2">
             Download Mflix movies: High quality
@@ -29,18 +50,22 @@ export default async function DashboardPage() {
           <p className="text-center my-3 text-gray-300">
             Welcome to the official YTS.MX website. Here you can browse and{" "}
             <br />
-            download YIFY movies in excellent 720p, 1080p, 2160p 4K and 3D
-            quality
+            download YIFY movies in excellent 720p, 1080p, 2160p 4K, and 3D
+            quality.
           </p>
         </div>
       </nav>
 
-      {/* body section */}
+      {/* Body Section */}
       <div className="container mt-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {/* map the movie array to div as movie single element */}
-          {moviesQuery.length > 0 ? (
-            moviesQuery.map((movie) => (
+        {/* Display loading, error, or movie list */}
+        {loading ? (
+          <p>Loading movies...</p>
+        ) : error ? (
+          <p className="text-red-500">{error}</p>
+        ) : movies.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {movies.map((movie) => (
               <div key={movie._id} className="h-[480px]">
                 <Card className="h-full">
                   <CardHeader>
@@ -62,9 +87,7 @@ export default async function DashboardPage() {
                       />
                     </div>
                     <div className="flex flex-col justify-between h-[125px]">
-                      {/* movie plot */}
                       <p className="line-clamp-3 text-xs">{movie?.plot}</p>
-                      {/* movie genere */}
                       <div className="text-blue-700 text-sm font-semibold">
                         {movie?.genres.length && movie?.genres?.join(" / ")}
                       </div>
@@ -78,7 +101,6 @@ export default async function DashboardPage() {
                         <Badge variant="success" className="font-medium">
                           Rated: {movie?.rated ?? "N/A"}
                         </Badge>
-
                         <div
                           className="flex flex-row gap-1 items-center"
                           title="IMDB Rating"
@@ -94,13 +116,12 @@ export default async function DashboardPage() {
                   <CardFooter></CardFooter>
                 </Card>
               </div>
-            ))
-          ) : (
-            <p>No movies available</p>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <p>No movies available</p>
+        )}
       </div>
     </main>
   );
 }
-// export default DashboardForm;

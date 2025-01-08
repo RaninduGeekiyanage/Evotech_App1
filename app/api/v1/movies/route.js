@@ -1,7 +1,7 @@
 import clientPromise from "@/app/libs/mongodb";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req) => {
   //Get movies from nongo db
 
   try {
@@ -29,12 +29,27 @@ export const GET = async () => {
 
     // console.log("MOnGO MFLIX MOVIES:: ", movies);
     // return NextResponse.json(movies);
-    return NextResponse.json({ movies });
+    // return NextResponse.json({ movies });
+    return new Response(JSON.stringify({ movies }), {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*", // Allow all origins (or specify the origin)
+      },
+    });
   } catch (error) {
     console.error("MONGO DB ERROR: ", error.message, error.stack);
-    return NextResponse.json(
-      { error: "Internal Server Error", details: error.message },
-      { status: 500 }
+    return new Response(
+      JSON.stringify({
+        error: "Internal Server Error",
+        details: error.message,
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
   }
 };
