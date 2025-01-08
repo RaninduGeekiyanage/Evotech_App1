@@ -1,5 +1,3 @@
-"use client";
-import { useEffect, useState } from "react";
 import { getMovies } from "../libs/apis/server";
 import {
   Card,
@@ -14,39 +12,11 @@ import { FaStar } from "react-icons/fa";
 // import Image from "next/image";
 import MoviePoster from "./MoviePoster";
 
-// export default async function DashboardPage() {
-//   const response = await getMovies();
-//   const moviesQuery = response?.movies || []; // Ensure movies is an array
+export default async function DashboardPage() {
+  const response = await getMovies();
+  const moviesQuery = response?.movies || []; // Ensure movies is an array
 
-//   console.log("MOVIES LIST::", moviesQuery);
-
-const DashboardForm = () => {
-  const [movies, setMovies] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const result = await getMovies();
-        console.log("Movies from MongoDB:", result);
-        if (result?.movies) {
-          setMovies(result.movies); // Set movies data from the API
-        } else {
-          setError(result?.message || "Something went wrong!");
-        }
-      } catch (error) {
-        setError("Failed to fetch movies");
-      } finally {
-        setLoading(false); // Stop loading after the data is fetched
-      }
-    };
-
-    fetchMovies(); // Call the async function to fetch movies
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  console.log("MOVIES LIST::", moviesQuery);
 
   return (
     <main>
@@ -69,8 +39,8 @@ const DashboardForm = () => {
       <div className="container mt-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {/* map the movie array to div as movie single element */}
-          {movies.length > 0 ? (
-            movies.map((movie) => (
+          {moviesQuery.length > 0 ? (
+            moviesQuery.map((movie) => (
               <div key={movie._id} className="h-[480px]">
                 <Card className="h-full">
                   <CardHeader>
@@ -132,5 +102,5 @@ const DashboardForm = () => {
       </div>
     </main>
   );
-};
-export default DashboardForm;
+}
+// export default DashboardForm;
