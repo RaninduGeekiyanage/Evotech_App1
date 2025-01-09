@@ -113,7 +113,7 @@ export default function DashboardPage() {
                           title="IMDB Rating"
                         >
                           <FaStar className="text-yellow-500 text-2x" />
-                          <span className="text-sm font-semibold">
+                          <span className="text-sm font-semibold text-gray-300">
                             {movie?.imdb?.rating ?? 0}/10
                           </span>
                         </div>
