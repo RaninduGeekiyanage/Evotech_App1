@@ -1,4 +1,3 @@
-import { getMovies } from "../libs/apis/server";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { FaStar } from "react-icons/fa";
 // import Image from "next/image";
 import MoviePoster from "./MoviePoster";
+import { getMovies } from "@/lib/apis/server";
 
 export default async function DashboardPage() {
   const response = await getMovies();
