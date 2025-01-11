@@ -3,7 +3,7 @@ import Link from "next/link";
 //Client component for CSR
 
 import { useState } from "react";
-import { loginUser } from "../libs/apis/server";
+import { loginUser } from "@/lib/apis/server";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 
