@@ -16,10 +16,12 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import Link from "next/link";
 import { useState } from "react";
-import { registerUser } from "@/lib/apis/server";
+//import { registerUser } from "@/lib/apis/server";
 import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
-import { FaRegThumbsUp } from "react-icons/fa";
+//import { ToastAction } from "@/components/ui/toast";
+//import { FaRegThumbsUp } from "react-icons/fa";
+
+import { signUp } from "@/lib/auth-client";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -51,39 +53,64 @@ export default function RegisterForm() {
     // if (name && email && password && confirmPassword) {
     if (password === confirmPassword) {
       setError(DEFAULT_ERROR);
-      setIsLoading(true);
-      //if response coming, call the registerUser ENd point
-      const registerResponse = await registerUser({
-        name,
-        email,
-        password,
-      });
-      setIsLoading(false);
+      // setIsLoading(true);
+      // //if response coming, call the registerUser ENd point
+      // const registerResponse = await registerUser({
+      //   name,
+      //   email,
+      //   password,
+      // });
+      // setIsLoading(false);
 
-      // if there is registerResponse Error, set it to setError setter function for rendering
-      if (registerResponse.error) {
-        setError({ error: true, message: registerResponse.error });
-      } else {
-        //success area. u can add iser interaction here after insert success
-        toast({
-          variant: "success",
-          title: (
-            <div className="flex flex-row">
-              Registration successful..{" "}
-              <span className="pl-2">
-                <FaRegThumbsUp className="text-green-400 h-4 w-4" />
-              </span>
-            </div>
-          ),
-          description: "Plese continue with login",
-          action: (
-            <ToastAction altText="login">
-              <Link href="/login">Login</Link>
-            </ToastAction>
-          ),
-        });
+      // // if there is registerResponse Error, set it to setError setter function for rendering
+      // if (registerResponse.error) {
+      //   setError({ error: true, message: registerResponse.error });
+      // } else {
+      //   //success area. u can add iser interaction here after insert success
+      //   toast({
+      //     variant: "success",
+      //     title: (
+      //       <div className="flex flex-row">
+      //         Registration successful..{" "}
+      //         <span className="pl-2">
+      //           <FaRegThumbsUp className="text-green-400 h-4 w-4" />
+      //         </span>
+      //       </div>
+      //     ),
+      //     description: "Plese continue with login",
+      //     action: (
+      //       <ToastAction altText="login">
+      //         <Link href="/login">Login</Link>
+      //       </ToastAction>
+      //     ),
+      //   });
+      // }
+      // // console.log("Register Response:", registerResponse);
+      setIsLoading(true);
+      const { data, error } = await signUp.email({
+        email: email,
+        password: password,
+        name: name,
+        image: undefined,
+      }, {
+        onRequest: () => {
+          //console log("onRequest", ctx);  
+        },
+        onSuccess: (ctx) => {
+          console.log("onSuccesst", ctx);  
+        },
+        onError: (ctx) => {
+          // console.log("onError", ctx);
+          if(ctx) {
+            setError({error: true, message: ctx.error.message})
+          }
+        }
       }
-      // console.log("Register Response:", registerResponse);
+    );
+    setIsLoading(false);
+    if (data) {
+      console.log("data:", data)
+    }
     } else {
       setError({ error: true, message: "Password dosn't match..!" });
     }
@@ -94,10 +121,10 @@ export default function RegisterForm() {
     <div className="flex justify-center items-center min-h-screen">
       <Card className="bg-blue-50/90 w-[350px]">
         <CardHeader>
-          <CardTitle className="font-semibold text-xl font-sans">
+          <CardTitle className="font-semibold text-xl font-sans text-center">
             Create an Account
           </CardTitle>
-          <CardDescription>Enter Your Information to get Start</CardDescription>
+          <CardDescription className="text-xs text-center">Enter Your Information to get Start</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmitForm} className="font-sans">
           <CardContent>
