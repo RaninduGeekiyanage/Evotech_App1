@@ -18,10 +18,11 @@ import Link from "next/link";
 import { useState } from "react";
 //import { registerUser } from "@/lib/apis/server";
 import { useToast } from "@/hooks/use-toast";
-//import { ToastAction } from "@/components/ui/toast";
-//import { FaRegThumbsUp } from "react-icons/fa";
+import { ToastAction } from "@/components/ui/toast";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 import { signUp } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -87,30 +88,51 @@ export default function RegisterForm() {
       // }
       // // console.log("Register Response:", registerResponse);
       setIsLoading(true);
-      const { data, error } = await signUp.email({
-        email: email,
-        password: password,
-        name: name,
-        image: undefined,
-      }, {
-        onRequest: () => {
-          //console log("onRequest", ctx);  
+      const { data, error } = await signUp.email(
+        {
+          email: email,
+          password: password,
+          name: name,
+          image: undefined,
         },
-        onSuccess: (ctx) => {
-          console.log("onSuccesst", ctx);  
-        },
-        onError: (ctx) => {
-          // console.log("onError", ctx);
-          if(ctx) {
-            setError({error: true, message: ctx.error.message})
-          }
+        {
+          onRequest: () => {
+            //console log("onRequest", ctx);
+          },
+          onSuccess: (ctx) => {
+            console.log("onSuccesst", ctx);
+            //redirect("/login")
+            toast({
+              variant: "success",
+              title: (
+                <div className="flex flex-row">
+                  Registration successful..{" "}
+                  <span className="pl-2">
+                    <FaRegThumbsUp className="text-green-400 h-4 w-4" />
+                  </span>
+                </div>
+              ),
+              description: "Plese continue with login",
+              action: (
+                <ToastAction altText="login">
+                  <Link href="/login">Login</Link>
+                </ToastAction>
+              ),
+            });
+            redirect("/login")
+          },
+          onError: (ctx) => {
+            // console.log("onError", ctx);
+            if (ctx) {
+              setError({ error: true, message: ctx.error.message });
+            }
+          },
         }
+      );
+      setIsLoading(false);
+      if (data) {
+        console.log("data:", data);
       }
-    );
-    setIsLoading(false);
-    if (data) {
-      console.log("data:", data)
-    }
     } else {
       setError({ error: true, message: "Password dosn't match..!" });
     }
@@ -124,7 +146,9 @@ export default function RegisterForm() {
           <CardTitle className="font-semibold text-xl font-sans text-center">
             Create an Account
           </CardTitle>
-          <CardDescription className="text-xs text-center">Enter Your Information to get Start</CardDescription>
+          <CardDescription className="text-xs text-center">
+            Enter Your Information to get Start
+          </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmitForm} className="font-sans">
           <CardContent>
