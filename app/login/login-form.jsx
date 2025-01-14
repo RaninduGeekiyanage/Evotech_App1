@@ -1,4 +1,5 @@
 "use client";
+import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 //Client component for CSR
 
@@ -6,6 +7,9 @@ import { useState } from "react";
 import { loginUser } from "@/lib/apis/server";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
+import { redirect } from "next/navigation";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function LoginForm() {
   // setter functions for input fields
@@ -14,7 +18,11 @@ export default function LoginForm() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false); // State for successful login
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // State for successful login
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -50,13 +58,31 @@ export default function LoginForm() {
       // console.log("Form Data", { email: email, passowrd: password });
 
       // calling the loginUser server action
-      const login = await loginUser({ email: email, password: password }); // pass the user data in to server action -> loginUser
-      if (login.success) {
-        setLoginSuccess(true); // Set login success to true
-        console.log("LOGIN RESPONSE", login);
-      } else {
-        // Handle login failure here (e.g., show error message)
-      }
+      // const login = await loginUser({ email: email, password: password }); // pass the user data in to server action -> loginUser
+      // if (login.success) {
+      //   setLoginSuccess(true); // Set login success to true
+      //   console.log("LOGIN RESPONSE", login);
+      // } else {
+      //   // Handle login failure here (e.g., show error message)
+      // }
+
+      setIsLoading(true);
+      await signIn.email(
+        {
+          email,
+          password,
+        },
+        {
+          onSuccess: () => {
+            redirect("/dashboard");
+          },
+          onError: (ctx) => {
+            console.log(ctx.error.message);
+            setError(ctx.error.message);
+          },
+        }
+      );
+      setIsLoading(false);
     }
   };
 
@@ -93,6 +119,11 @@ export default function LoginForm() {
             {emailError && (
               <div className="text-red-600 text-sm mt-1">{emailError}</div>
             )}
+            {error.error && (
+              <span className="text-orange-500 text-xs text-center blink">
+                {error.message}
+              </span>
+            )}
           </div>
 
           {/* Password */}
@@ -125,10 +156,13 @@ export default function LoginForm() {
                 )}
               </button>
             </div>
+
             {/* Password error message -> if there is passworderror then render password error to the div */}
             {passwordError && (
               <div className="text-red-600 text-sm mt-1">{passwordError}</div>
             )}
+
+            {error && <div className="text-red-600 text-sm mt-1">{error}</div>}
           </div>
 
           {/* remember me */}
@@ -157,29 +191,14 @@ export default function LoginForm() {
           </div>
 
           {/* submit button */}
-          {/* <button
+          <button
             type="submit"
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
+            className="w-full text-green-500 bg-gray-900 hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
+            disabled={isLoading}
           >
-            Sign In
-          </button> */}
-          {loginSuccess ? (
-            <Link href="/dashboard">
-              <button
-                type="submit"
-                className="w-full text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mt-5"
-              >
-                Go to Dashboard
-              </button>
-            </Link>
-          ) : (
-            <button
-              type="submit"
-              className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5"
-            >
-              Sign In
-            </button>
-          )}
+            {isLoading && <Loader2 className="animate-spin" />}
+            <span>Sign In</span>
+          </button>
 
           {/* Dont have account */}
 
