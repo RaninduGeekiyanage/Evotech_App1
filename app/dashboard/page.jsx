@@ -3,7 +3,7 @@ import DashboardForm from "./DashBoardForm";
 
 export const page = () => {
   return (
-    <div className="bg-gray-600">
+    <div>
       <DashboardForm />
     </div>
   );
