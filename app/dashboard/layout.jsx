@@ -12,7 +12,7 @@ const DashboardLayout = ({ children }) => {
       <div className="bg-gray-500 flex flex-1 flex-col overflow-hidden">
         {/* Dashboard Header */}
         <header className="bg-white flex h-16 items-center justify-between gap-4 border-b px-6 shadow-sm">
-          <h1 className="text-2xl font-bold text-blue-800">Mflix Dashboard</h1>
+          <h1 className="text-2xl font-bold text-blue-800">Download latest Mflix Movies..</h1>
           <UserNav />
         </header>
         {/* Dashboard pages */}
