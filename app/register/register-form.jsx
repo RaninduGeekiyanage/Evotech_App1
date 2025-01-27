@@ -100,7 +100,7 @@ export default function RegisterForm() {
             //console log("onRequest", ctx);
           },
           onSuccess: (ctx) => {
-            console.log("onSuccesst", ctx);
+            // console.log("onSuccesst", ctx);
             //redirect("/login")
             toast({
               variant: "success",

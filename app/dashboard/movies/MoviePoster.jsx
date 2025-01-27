@@ -6,10 +6,18 @@ import { useState } from "react";
 export default function MoviePoster({ posterUrl, title }) {
   const [hasError, setHasError] = useState(false); // Track if an error occurred
 
-  if (hasError) {
+  // if (hasError) {
+  //   return (
+  //     <div className="flex items-center justify-center bg-gray-200 text-gray-700 px-5">
+  //       No image available
+  //     </div>
+  //   );
+  // }
+
+  if (!posterUrl) {
     return (
-      <div className="flex items-center justify-center bg-gray-200 text-gray-700 px-5">
-        No image available
+      <div className="flex items-center justify-center bg-gray-200 text-gray-700 px-">
+        No Image Available
       </div>
     );
   }

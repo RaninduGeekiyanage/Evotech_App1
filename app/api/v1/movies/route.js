@@ -21,7 +21,7 @@ export const GET = async () => {
 
     //fetch the movies from database
     const movies = await db
-      .collection("movies")
+      .collection("movies-n")
       .find({})
       .sort({ metacritic: -1 })
       .limit(8)

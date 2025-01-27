@@ -12,11 +12,18 @@ import { FaStar } from "react-icons/fa";
 import MoviePoster from "./MoviePoster";
 import { getMovies } from "@/lib/apis/server";
 
-export default async function DashboardPage() {
+
+export default async function MovieForm() {
+  // const session = await auth.api.getSession({
+  //   headers: await headers(),
+  // });
+
+  //console.log("SESSION", session);
+
   const response = await getMovies();
   const moviesQuery = response?.movies || []; // Ensure movies is an array
 
-  console.log("MOVIES LIST::", moviesQuery);
+ // console.log("MOVIES LIST::", moviesQuery);
 
   return (
     <div className="space-y-4">
@@ -54,7 +61,7 @@ export default async function DashboardPage() {
                     </div>
                     <div className="text-gray-500 text-xs font-semibold">
                       (
-                      {movie?.languages.length && movie?.languages?.join(" / ")}
+                      {movie?.languages && movie?.languages?.join(" / ")}
                       )
                     </div>
                     <div className="flex flex-row justify-between items-center">
@@ -70,6 +77,7 @@ export default async function DashboardPage() {
                         <span className="text-sm font-semibold">
                           {movie?.imdb?.rating ?? 0}/10
                         </span>
+                        
                       </div>
                     </div>
                   </div>
@@ -85,4 +93,4 @@ export default async function DashboardPage() {
     </div>
   );
 }
-// export default DashboardForm;
+
