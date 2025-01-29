@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MultiSelect } from "../../../components/multi-select";
-import { GENRES, IMDBRATINGS, LANGUAGES, RATINGS } from "@/lib/constants";
+import { GENRES, LANGUAGES, RATINGS } from "@/lib/constants";
 import { useState } from "react";
 import {
   Select,
@@ -24,6 +24,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { createMovie } from "@/lib/actions/movie";
+import { toast } from "@/hooks/use-toast";
+import { IoWarningOutline } from "react-icons/io5";
+import { FaRegThumbsUp } from "react-icons/fa";
 
 export default function AddMovieForm() {
   const [genres, setGenres] = useState([]);
@@ -42,23 +45,46 @@ export default function AddMovieForm() {
     value: lang,
   }));
 
+  const handleImdbRatingValue = (e) => {
+    const inputValue = e.target.value;
+
+    // Allow only floating-point numbers
+    if (/^\d*\.?\d*$/.test(inputValue)) {
+      const numericValue = parseFloat(inputValue);
+
+      // Restrict the value to be between 0 and 10
+      if (numericValue >= 0 && numericValue <= 10) {
+        setImdbRating(inputValue);
+      }
+    }
+  };
+
   const handleSubmitForm = async (event) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const title = formData.get("title")?.toString() || "";
     const year = parseInt(formData.get("year")) || null;
     const plot = formData.get("plot")?.toString() || "";
+    const poster = formData.get("poster")?.toString() || "";
+    const imdbRating = formData.get("imdbRating")?.toString() || "";
 
     // Validate and parse imdbRating
+    // const imdbRatingValue = parseFloat(imdbRating);
+
     const imdbRatingValue = parseFloat(imdbRating);
-    console.log(imdbRatingValue);
+    const imdb = !isNaN(imdbRating) ? { imdb: { rating: imdbRating } } : null;
 
-    const imdb = !isNaN(imdbRatingValue)
-      ? { imdb: { rating: imdbRatingValue } }
-      : null;
-
-    if (title && year && plot && rated && imdb) {
-      console.log({ title, year, plot, rated, genres, languages, ...imdb });
+    if (title && year && plot && rated && imdb && poster) {
+      console.log({
+        title,
+        year,
+        plot,
+        rated,
+        genres,
+        languages,
+        ...imdb,
+        poster,
+      });
       setLoading(true);
       await createMovie({
         title,
@@ -68,10 +94,37 @@ export default function AddMovieForm() {
         genres,
         languages,
         ...imdb,
+        poster,
       });
       setLoading(false);
+      toast({
+        variant: "success",
+        title: (
+          <div className="flex flex-row">
+            Move added successfully..{" "}
+            <span className="pl-2">
+              <FaRegThumbsUp className="text-green-400 h-4 w-4" />
+            </span>
+          </div>
+        )
+        
+      });
+    } else {
+      toast({
+        variant: "warning",
+        title: (
+          <div className="flex flex-row">
+           Warning..!{" "}
+            <span className="pl-2">
+              <IoWarningOutline className="text-orange-400 h-4 w-4" />
+            </span>
+          </div>
+        ),
+        description: "Fill all the fileds and re submit",
+        
+      });
     }
-  };
+  }
 
   // console.log(genresList)
   return (
@@ -122,12 +175,12 @@ export default function AddMovieForm() {
               />
             </div>
 
-            <div>
-              <div>
-                <Label htmlFor="rated">Movie Rated</Label>
+            <div className="flex flex-col md:flex-row md:justify-between gap-4">
+              <div className="flex-1">
+                <Label htmlFor="rated">Content Rating</Label>
                 <Select onValueChange={(val) => setRated(val)}>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a IMDB Rating" />
+                    <SelectValue placeholder="Select Content Rating" />
                   </SelectTrigger>
                   <SelectContent>
                     {RATINGS.map((rating) => (
@@ -139,26 +192,29 @@ export default function AddMovieForm() {
                 </Select>
               </div>
 
-              <div>
+              <div className="flex-1">
                 <Label htmlFor="imdbRating">IMDB Rating</Label>
-                <Select
-                  onValueChange={(val) =>  setImdbRating(val)}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a Rating" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {IMDBRATINGS.map((imdbR) => (
-                      <SelectItem key={imdbR} value={imdbR}>
-                        {imdbR}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Input
+                  type="number"
+                  step="0.1" // Allows decimal values
+                  min="0"
+                  max="10"
+                  id="imdbRating"
+                  name="imdbRating"
+                  placeholder="Imdb Rating"
+                  value={imdbRating}
+                  onChange={handleImdbRatingValue}
+                />
               </div>
+            </div>
+
+            <div>
+              <Label htmlFor="poster">Poster URL</Label>
+              <Input id="poster" name="poster" placeholder="Enter poster URL" />
             </div>
           </CardContent>
 
-          <CardFooter className="w-full flex justify-end space-x-2">
+          <CardFooter className="w-full flex justify-end space-x-5 mt-5">
             <Button type="reset" variant="outline">
               Clear form
             </Button>
