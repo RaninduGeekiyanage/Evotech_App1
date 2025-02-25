@@ -4,12 +4,11 @@ import Link from "next/link";
 //Client component for CSR
 
 import { useState } from "react";
-import { loginUser } from "@/lib/apis/server";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 
 export default function LoginForm() {
   // setter functions for input fields
@@ -54,18 +53,7 @@ export default function LoginForm() {
     const isValid = validateForm();
     //check the formValidation is valid then form submittion continue
     if (isValid) {
-      //Below this line - Login form data submission
-      // console.log("Form Data", { email: email, passowrd: password });
-
-      // calling the loginUser server action
-      // const login = await loginUser({ email: email, password: password }); // pass the user data in to server action -> loginUser
-      // if (login.success) {
-      //   setLoginSuccess(true); // Set login success to true
-      //   console.log("LOGIN RESPONSE", login);
-      // } else {
-      //   // Handle login failure here (e.g., show error message)
-      // }
-
+     
       setIsLoading(true);
       await signIn.email(
         {
@@ -77,8 +65,14 @@ export default function LoginForm() {
             redirect("/dashboard");
           },
           onError: (ctx) => {
-            console.log(ctx.error.message);
-            setError(ctx.error.message);
+           // console.error("Sign-in Error:", ctx.error);
+            if (ctx.error && ctx.error.message) { //Safely access message
+              setError(ctx.error.message);
+          } else if (typeof ctx.error === 'string') { //Handle string errors
+              setError(ctx.error);
+          } else {
+              setError("An error occurred during sign-in."); // Generic error message
+          }
           },
         }
       );
