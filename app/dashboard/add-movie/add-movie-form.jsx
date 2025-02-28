@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MultiSelect } from "../../../components/multi-select";
 import { GENRES, LANGUAGES, RATINGS } from "@/lib/constants";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -21,12 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { createMovie } from "@/lib/actions/movie";
-import { toast } from "@/hooks/use-toast";
-import { IoWarningOutline } from "react-icons/io5";
-import { FaRegThumbsUp } from "react-icons/fa";
+import { createMovie } from "@/lib/actions/add-movie";
+import { uploadToBlob } from "@/lib/actions/blob-upload-action";
+import { Button } from "@/components/ui/button";
+import showToast from "@/components/showToast";
 
 export default function AddMovieForm() {
   const [genres, setGenres] = useState([]);
@@ -34,6 +33,8 @@ export default function AddMovieForm() {
   const [rated, setRated] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [imdbRating, setImdbRating] = useState("");
+  const [file, setFile] = useState(null);
+  const [uploadedUrl, setUploadedUrl] = useState(null);
 
   const genresList = GENRES.map((genre) => ({
     label: genre,
@@ -47,12 +48,8 @@ export default function AddMovieForm() {
 
   const handleImdbRatingValue = (e) => {
     const inputValue = e.target.value;
-
-    // Allow only floating-point numbers
     if (/^\d*\.?\d*$/.test(inputValue)) {
       const numericValue = parseFloat(inputValue);
-
-      // Restrict the value to be between 0 and 10
       if (numericValue >= 0 && numericValue <= 10) {
         setImdbRating(inputValue);
       }
@@ -65,68 +62,58 @@ export default function AddMovieForm() {
     const title = formData.get("title")?.toString() || "";
     const year = parseInt(formData.get("year")) || null;
     const plot = formData.get("plot")?.toString() || "";
-    const poster = formData.get("poster")?.toString() || "";
     const imdbRating = formData.get("imdbRating")?.toString() || "";
 
     // Validate and parse imdbRating
-    // const imdbRatingValue = parseFloat(imdbRating);
-
     const imdbRatingValue = parseFloat(imdbRating);
     const imdb = !isNaN(imdbRating) ? { imdb: { rating: imdbRating } } : null;
 
-    if (title && year && plot && rated && imdb && poster) {
-      console.log({
-        title,
-        year,
-        plot,
-        rated,
-        genres,
-        languages,
-        ...imdb,
-        poster,
-      });
-      setLoading(true);
-      await createMovie({
-        title,
-        year,
-        plot,
-        rated,
-        genres,
-        languages,
-        ...imdb,
-        poster,
-      });
-      setLoading(false);
-      toast({
-        variant: "success",
-        title: (
-          <div className="flex flex-row">
-            Move added successfully..{" "}
-            <span className="pl-2">
-              <FaRegThumbsUp className="text-green-400 h-4 w-4" />
-            </span>
-          </div>
-        )
-        
-      });
-    } else {
-      toast({
-        variant: "warning",
-        title: (
-          <div className="flex flex-row">
-           Warning..!{" "}
-            <span className="pl-2">
-              <IoWarningOutline className="text-orange-400 h-4 w-4" />
-            </span>
-          </div>
-        ),
-        description: "Fill all the fileds and re submit",
-        
-      });
-    }
-  }
+    // console.log("file");
 
-  // console.log(genresList)
+    if (!title || !year || !plot || !rated || !file) {
+      showToast("Fill all required fields!", "warning");
+      return;
+    }
+
+    setLoading(true);
+
+    const response = await uploadToBlob(file);
+
+    if (response.success) {
+      const uploadedUrl = response.url;
+      setUploadedUrl(uploadedUrl);
+
+      const movieResponse = await createMovie({
+        title,
+        year,
+        plot,
+        rated,
+        genres,
+        languages,
+        imdb: { rating: imdbRatingValue },
+        poster: uploadedUrl,
+        addedAt: new Date(),
+      });
+
+      if (movieResponse.success) {
+        showToast(movieResponse.message, "success");
+      } else {
+        showToast(movieResponse.message, "error");
+      }
+    } else {
+      showToast(response.message, "error");
+    }
+
+    setLoading(false);
+  };
+
+  const handleFileChanged = (event) => {
+    const selectedFile = event.target.files ? event.target.files[0] : null;
+    if (selectedFile) {
+      setFile(selectedFile);
+    }
+  };
+
   return (
     <div>
       <Card className="max-w-2xl mx-auto">
@@ -196,7 +183,7 @@ export default function AddMovieForm() {
                 <Label htmlFor="imdbRating">IMDB Rating</Label>
                 <Input
                   type="number"
-                  step="0.1" // Allows decimal values
+                  step="0.1"
                   min="0"
                   max="10"
                   id="imdbRating"
@@ -209,8 +196,8 @@ export default function AddMovieForm() {
             </div>
 
             <div>
-              <Label htmlFor="poster">Poster URL</Label>
-              <Input id="poster" name="poster" placeholder="Enter poster URL" />
+              <Label>Upload Movie Poster</Label>
+              <Input name="file" type="file" onChange={handleFileChanged} />
             </div>
           </CardContent>
 
@@ -220,7 +207,7 @@ export default function AddMovieForm() {
             </Button>
             <Button type="submit" disabled={isLoading}>
               {isLoading && <Loader2 className="animate-spin" />}
-              add Movies
+              Add Movie
             </Button>
           </CardFooter>
         </form>

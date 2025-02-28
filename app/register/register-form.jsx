@@ -17,12 +17,13 @@ import { LuEyeOff } from "react-icons/lu";
 import Link from "next/link";
 import { useState } from "react";
 //import { registerUser } from "@/lib/apis/server";
-import { useToast } from "@/hooks/use-toast";
-import { ToastAction } from "@/components/ui/toast";
+
+// import { ToastAction } from "@/components/ui/toast";
 import { FaRegThumbsUp } from "react-icons/fa";
 
 import { signUp } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
+import { toast } from "sonner";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -35,7 +36,7 @@ export default function RegisterForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { toast } = useToast();
+ 
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev);
@@ -54,39 +55,7 @@ export default function RegisterForm() {
     // if (name && email && password && confirmPassword) {
     if (password === confirmPassword) {
       setError(DEFAULT_ERROR);
-      // setIsLoading(true);
-      // //if response coming, call the registerUser ENd point
-      // const registerResponse = await registerUser({
-      //   name,
-      //   email,
-      //   password,
-      // });
-      // setIsLoading(false);
-
-      // // if there is registerResponse Error, set it to setError setter function for rendering
-      // if (registerResponse.error) {
-      //   setError({ error: true, message: registerResponse.error });
-      // } else {
-      //   //success area. u can add iser interaction here after insert success
-      //   toast({
-      //     variant: "success",
-      //     title: (
-      //       <div className="flex flex-row">
-      //         Registration successful..{" "}
-      //         <span className="pl-2">
-      //           <FaRegThumbsUp className="text-green-400 h-4 w-4" />
-      //         </span>
-      //       </div>
-      //     ),
-      //     description: "Plese continue with login",
-      //     action: (
-      //       <ToastAction altText="login">
-      //         <Link href="/login">Login</Link>
-      //       </ToastAction>
-      //     ),
-      //   });
-      // }
-      // // console.log("Register Response:", registerResponse);
+      
       setIsLoading(true);
       const { data, error } = await signUp.email(
         {
@@ -113,11 +82,7 @@ export default function RegisterForm() {
                 </div>
               ),
               description: "Plese continue with login",
-              action: (
-                <ToastAction altText="login">
-                  <Link href="/login">Login</Link>
-                </ToastAction>
-              ),
+              
             });
             redirect("/login")
           },
@@ -135,6 +100,7 @@ export default function RegisterForm() {
       }
     } else {
       setError({ error: true, message: "Password dosn't match..!" });
+      toast.error(message)
     }
     // }
     // console.log("Error!", error);

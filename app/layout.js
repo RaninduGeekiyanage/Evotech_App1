@@ -1,6 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";  // This automatically adds a default container
+
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

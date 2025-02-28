@@ -1,3 +1,4 @@
+
 import {
   Card,
   CardContent,
@@ -10,7 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { FaStar } from "react-icons/fa";
 // import Image from "next/image";
 import MoviePoster from "./MoviePoster";
-import { getMovies } from "@/lib/apis/server";
+import { getMovies } from "@/lib/actions/get-movies-action";
+// import { getMovies } from "@/lib/apis/server";
 
 
 export default async function MovieForm() {
@@ -21,9 +23,9 @@ export default async function MovieForm() {
   //console.log("SESSION", session);
 
   const response = await getMovies();
-  const moviesQuery = response?.movies || []; // Ensure movies is an array
+  // const moviesQuery = response?.movies || []; // Ensure movies is an array
+ const moviesQuery = response?.data || []; // Ensure movies is an array
 
- // console.log("MOVIES LIST::", moviesQuery);
 
   return (
     <div className="space-y-4">
