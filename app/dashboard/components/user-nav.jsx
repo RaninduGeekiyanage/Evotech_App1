@@ -19,7 +19,7 @@ import {
 // connect the user session from useSession
 export default function UserNav() {
   const { data: session } = useSession();
-  console.log(session);
+  //console.log(session);
 
   const handleLogout = async () => {
     await signOut({

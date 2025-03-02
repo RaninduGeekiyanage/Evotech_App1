@@ -1,19 +1,15 @@
-"use client";
-
+import { MultiSelect } from "@/components/multi-select"
+import showToast from "@/components/showToast"
+import { Button } from "@/components/ui/button"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { MultiSelect } from "../../../components/multi-select";
-import { GENRES, LANGUAGES, RATINGS } from "@/lib/constants";
-import React, { useEffect, useState } from "react";
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+  } from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -21,22 +17,27 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader, Loader2 } from "lucide-react";
-import { createMovie } from "@/lib/actions/add-movie";
-import { uploadToBlob } from "@/lib/actions/blob-upload-action";
-import { Button } from "@/components/ui/button";
-import showToast from "@/components/showToast";
-import { movieSchema } from "@/lib/validation/movieSchema";
+import { Textarea } from "@/components/ui/textarea"
+import { createMovie } from "@/lib/actions/add-movie"
+import { uploadToBlob } from "@/lib/actions/blob-upload-action"
+import { GENRES, LANGUAGES, RATINGS } from "@/lib/constants"
+import { movieSchema } from "@/lib/validation/movieSchema"
+import Image from "next/image"
+import { useEffect, useState } from "react"
 
-export default function AddMovieForm() {
-  const [genres, setGenres] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [rated, setRated] = useState("");
-  const [isLoading, setLoading] = useState(false);
-  const [imdbRating, setImdbRating] = useState("");
+export default function EditMovieForm({movie, open, onCancel}) {
+  const [title, setTitle] = useState(movie?.title);
+  const [year, setYear] = useState(movie?.year)
+  const [plot, setPlot] = useState(movie?.plot)
+  const [rated, setRated] = useState(movie?.rated);
+  const [genres, setGenres] = useState(movie?.genres);
+  const [languages, setLanguages] = useState([]);  
+  const [imdbRating, setImdbRating] = useState(movie?.imdb.rating);
+  const [poster, setPoster] = useState(movie?.poster)
   const [file, setFile] = useState(null);
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [errors, setErrors] = useState({}); // State to store validation errors
+  const [isLoading, setLoading] = useState(false);
   const [key, setKey] = useState(0); // Key for remounting
 
    // Reset errors when the key changes (component remounts)
@@ -145,28 +146,37 @@ export default function AddMovieForm() {
   const resetForm = () => {
     setKey((prevKey) => prevKey + 1); // Change the key to force remount
   };
-
   return (
-    <div key={key}>
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Add movie</CardTitle>
-          <CardDescription>Add a movie to the MFlix database</CardDescription>
-        </CardHeader>
+    <Dialog open={open} onOpenChange={onCancel}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Edit Movie</DialogTitle>
+                <DialogDescription>Update the Selected Movie</DialogDescription>
+            </DialogHeader>
+        
+
         <form onSubmit={handleSubmitForm}>
-          <CardContent className="space-y-4">
+          <div className="space-y-4">
             <div>
               <Label htmlFor="title">Movie title</Label>
               <Input
                 id="title"
                 name="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 placeholder="Enter the movie title"
               />
               {errors.title && <p className="text-orange-500 text-sm">{errors.title}</p>}
             </div>
             <div>
               <Label htmlFor="year">Movie Year</Label>
-              <Input id="year" name="year" placeholder="Enter the Year" />
+              <Input 
+              id="year" 
+              name="year" 
+              placeholder="Enter the Year" 
+              value={year}
+                onChange={(e) => setYear(e.target.value)}
+              />
               {errors.year && <p className="text-orange-500 text-sm">{errors.year}</p>}
             </div>
             <div>
@@ -174,7 +184,9 @@ export default function AddMovieForm() {
               <Textarea
                 id="plot"
                 name="plot"
-                placeholder="Enter the movie Plot"
+                placeholder="Enter the movie Plot"                
+                value={plot}
+                onChange={(e) => setPlot(e.target.value)}
               />
               {errors.plot && <p className="text-orange-500 text-sm">{errors.plot}</p>}
             </div>
@@ -185,6 +197,7 @@ export default function AddMovieForm() {
                 list={genresList}
                 placeholder="Select Movie genres"
                 onValueChange={setGenres}
+
               />
               {errors.genres && <p className="text-orange-500 text-sm">{errors.genres}</p>}
             </div>
@@ -199,10 +212,19 @@ export default function AddMovieForm() {
               {errors.languages && <p className="text-orange-500 text-sm">{errors.languages}</p>}
             </div>
 
-            <div className="flex flex-col md:flex-row md:justify-between gap-4">
+
+
+
+            <div className="flex flex-row md:justify-between gap-4">
+              <div className="flex-1 flex-col">              
+              <p className="text-xs">Exsiting Poster</p>
+              <Image src={poster} width={120} height={150} className="height: auto border-3 border-gray-900 shadow-lg" alt="saved image"/>                      
+              </div>
+              <div className="flex-1">
+              <div className="flex flex-col gap-4">
               <div className="flex-1">
                 <Label htmlFor="rated">Content Rating</Label>
-                <Select onValueChange={(val) => setRated(val)}>
+                <Select value={rated} onValueChange={(val) => setRated(val)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select Content Rating" />
                   </SelectTrigger>
@@ -233,15 +255,32 @@ export default function AddMovieForm() {
                 {errors.imdb && <p className="text-orange-500 text-sm">{errors.imdb}</p>}
               </div>
             </div>
+              </div>
+
+            </div>
+
+
+
+
+
+
+
+
+            
+
+
+            
+
+
+
+
 
             <div>
               <Label>Upload Movie Poster</Label>
               <Input name="file" type="file" onChange={handleFileChanged} />
               {errors.poster && <p className="text-orange-500 text-sm">{errors.poster}</p>}
             </div>
-          </CardContent>
-
-          <CardFooter className="w-full flex justify-end space-x-5 mt-5">
+            <div className="w-full flex justify-end space-x-5 mt-5">
             <Button type="reset" variant="outline" onClick={resetForm}>
               Clear form
             </Button>
@@ -249,10 +288,12 @@ export default function AddMovieForm() {
               {isLoading && <Loader className="animate-spin text-orange-300"/>}
               Add Movie
             </Button>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
-  );
-}
+          </div>
+          </div>
 
+          
+        </form>
+        </DialogContent>
+    </Dialog>
+  )
+}

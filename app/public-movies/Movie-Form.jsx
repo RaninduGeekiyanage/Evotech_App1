@@ -12,6 +12,9 @@ import { FaStar } from "react-icons/fa";
 // import Image from "next/image";
 import MoviePoster from "./MoviePoster";
 import { getMovies } from "@/lib/actions/get-movies-action";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Eye, LayoutDashboard } from "lucide-react";
 // import { getMovies } from "@/lib/apis/server";
 
 
@@ -28,8 +31,19 @@ export default async function MovieForm() {
 
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-3xl font-bold">Movies</h1>
+    <div className="container space-y-4 my-10">
+    <div className="flex flex-row justify-between items-center">
+        <h1 className="text-lg">Browse Movies</h1>
+        <div className="flex justify-end">
+          <Link href="/dashboard/movies">
+            <Button variant="outline">
+              <LayoutDashboard />
+              Go to Dashboard
+            </Button>
+          </Link>
+        </div>
+      </div>
+      
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
         {/* map the movie array to div as movie single element */}
         {moviesQuery.length > 0 ? (
@@ -93,6 +107,7 @@ export default async function MovieForm() {
         )}
       </div>
     </div>
+    
   );
 }
 
