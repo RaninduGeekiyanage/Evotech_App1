@@ -17,7 +17,9 @@ export const updateMovie = async (id, movie) => {
     }
 
     // Convert id to ObjectId
-    const objectId = new ObjectId(id);
+    const objectId = ObjectId.createFromHexString(id);
+
+    
 
     const result = await db.collection("movies-n").updateOne({_id: objectId}, {$set: movie}, { upsert: true});
 

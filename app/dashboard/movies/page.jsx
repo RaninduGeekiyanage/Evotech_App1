@@ -8,7 +8,7 @@ import WaveLoader from "@/components/WaveLoader";
 
 // const MovieForm = lazy(() => import("./oldMovie-Form"));
 
-export const MoviesPage = async () => {
+export const MoviesPage = () => {
  
   return (
     <div className="space-y-4">

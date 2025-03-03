@@ -25,6 +25,8 @@ import { movieSchema } from "@/lib/validation/movieSchema";
 import { Loader } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter
+
 
 export default function EditMovieForm({ movie, open, onCancel }) {
   const [title, setTitle] = useState(movie?.title);
@@ -39,6 +41,9 @@ export default function EditMovieForm({ movie, open, onCancel }) {
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [errors, setErrors] = useState({}); // State to store validation errors
   const [isLoading, setLoading] = useState(false);
+  const router = useRouter(); // Initialize useRouter
+
+
 
   const genresList = GENRES.map((genre) => ({
     label: genre,
@@ -63,7 +68,7 @@ export default function EditMovieForm({ movie, open, onCancel }) {
     if (/^\d*\.?\d*$/.test(inputValue)) {
       const numericValue = parseFloat(inputValue);
       if (numericValue >= 0 && numericValue <= 10) {
-        setImdbRating(inputValue);
+        setImdbRating(inputValue ? parseFloat(inputValue) : "");
       }
     }
   };
@@ -119,7 +124,10 @@ export default function EditMovieForm({ movie, open, onCancel }) {
     const movieResponse = await updateMovie(movie.id, movieData);
     
     if (movieResponse.success) {
-      showToast(movieResponse.message, "success");
+      showToast(movieResponse.message, "success");      
+      onCancel(); // Close the modal after updating
+      router.refresh(); // Refresh the table data (this can refresh the parent table data)
+      
     } else {
       showToast(movieResponse.message, "error");
     }
