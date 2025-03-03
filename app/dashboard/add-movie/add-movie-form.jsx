@@ -184,7 +184,9 @@ export default function AddMovieForm() {
               <MultiSelect
                 list={genresList}
                 placeholder="Select Movie genres"
+                selectedItems={genres}
                 onValueChange={setGenres}
+
               />
               {errors.genres && <p className="text-orange-500 text-sm">{errors.genres}</p>}
             </div>
@@ -194,6 +196,7 @@ export default function AddMovieForm() {
               <MultiSelect
                 list={langList}
                 placeholder="Select Movie languages"
+                selectedItems={languages}
                 onValueChange={setLanguages}
               />
               {errors.languages && <p className="text-orange-500 text-sm">{errors.languages}</p>}

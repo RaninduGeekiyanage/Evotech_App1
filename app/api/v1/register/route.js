@@ -1,4 +1,4 @@
-import clientPromise from "@/lib/mongodb";
+import {db} from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 
@@ -17,9 +17,7 @@ export const POST = async (req) => {
 
     // can do more validation before insert
 
-    const client = await clientPromise();
 
-    const db = client.db("sample_mflix");
     //console.log("Database connection established");
 
     //check existing user in db

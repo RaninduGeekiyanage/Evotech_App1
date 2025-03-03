@@ -1,23 +1,18 @@
-import clientPromise from "@/lib/mongodb";
+import { db } from "@/lib/mongodb";
 // import { NextResponse } from "next/server";
 
 export const GET = async () => {
   //Get movies from nongo db
 
   try {
-    const client = await clientPromise();
+ 
 
     if (!client) {
       console.error("MongoClient not initialized");
       throw new Error("MongoClient not initialized");
     }
 
-    console.log("MongoClient initialized:", !!client);
-
-    //sample_mflix is the database name
-    const db = client.db("sample_mflix");
-
-    console.log("Database connection established");
+  
 
     //fetch the movies from database
     const movies = await db

@@ -1,10 +1,10 @@
-import clientPromise from "@/lib/mongodb";
+import { db } from "@/lib/mongodb";
 import MovieTable from "./movie-table";
 
 export default async function MovieData() {
   try {
-    const client = await clientPromise();
-    const db = client.db("sample_mflix");
+    // const client = await clientPromise();
+    // const db = client.db("sample_mflix");
 
     // Fetch movies sorted by `addedAt` in descending order (latest first)
     const moviesQuary = await db
