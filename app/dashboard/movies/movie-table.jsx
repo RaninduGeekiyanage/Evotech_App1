@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { useState } from "react";
 import EditMovieForm from "./edit-movie-form";
+import DeleteMovieDialog from "./delete-movie-form";
 
 export default function MovieTable({ movies }) {
   const [editingMovie, setEditingMovie] = useState(null);
@@ -24,6 +25,13 @@ export default function MovieTable({ movies }) {
   const handleDelete = (movie) => {
     console.log("Delete", movie);
     setDeletingMovie(movie);
+  };
+
+  // Function to handle delete confirmation
+  const handleConfirmDelete = (movieId) => {
+    console.log("Confirmed delete for movie ID:", movieId);
+    // Perform the delete operation (e.g., API call)
+    setDeletingMovie(null); // Close the dialog after delete
   };
 
   return (
@@ -75,12 +83,22 @@ export default function MovieTable({ movies }) {
           ))}
         </TableBody>
       </Table>
-      {editingMovie && 
-      <EditMovieForm 
-      movie={editingMovie}
-      open={true} 
-      onCancel={() => setEditingMovie(null)}
-      /> }
+      {editingMovie && (
+        <EditMovieForm
+          movie={editingMovie}
+          open={true}
+          onCancel={() => setEditingMovie(null)}
+        />
+      )}
+
+      {deletingMovie && (
+        <DeleteMovieDialog
+          movie={deletingMovie}
+          open={true}
+          onCancel={() => setDeletingMovie(null)}
+          onConfirm={handleConfirmDelete} // Pass function
+        />
+      )}
     </div>
   );
 }

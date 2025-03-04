@@ -24,7 +24,7 @@ import { GENRES, LANGUAGES, RATINGS } from "@/lib/constants";
 import { movieSchema } from "@/lib/validation/movieSchema";
 import { Loader } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
 
 
@@ -141,6 +141,9 @@ export default function EditMovieForm({ movie, open, onCancel }) {
       setFile(selectedFile);
     }
   };
+
+
+  
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
