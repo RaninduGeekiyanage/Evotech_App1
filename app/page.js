@@ -1,5 +1,3 @@
-// import DashboardPage from "./dashboard/page";
-
 import LoginPage from "./login/page";
 
 //server component for ssr

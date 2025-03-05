@@ -18,9 +18,9 @@ export default function MoviePoster({ posterUrl, title }) {
     <Image
       src={posterUrl}
       alt={title || "Movie Poster"}
-      width={200}
-      height={400}
-      className="h-full w-auto object-contain"
+      width={150}
+      height={300}
+      className="max-w-[200px] max-h-[400px] w-auto h-auto object-contain"
       onError={() => setHasError(true)} // Set error state if loading fails
       priority={true}
     />

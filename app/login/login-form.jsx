@@ -1,5 +1,5 @@
 "use client";
-import { signIn } from "@/lib/auth-client";
+import { signIn, signInWithGoogle } from "@/lib/auth-client";
 import Link from "next/link";
 //Client component for CSR
 
@@ -8,7 +8,6 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import { redirect } from "next/navigation";
 import { Loader2 } from "lucide-react";
-
 
 export default function LoginForm() {
   // setter functions for input fields
@@ -53,7 +52,6 @@ export default function LoginForm() {
     const isValid = validateForm();
     //check the formValidation is valid then form submittion continue
     if (isValid) {
-     
       setIsLoading(true);
       await signIn.email(
         {
@@ -65,14 +63,16 @@ export default function LoginForm() {
             redirect("/dashboard");
           },
           onError: (ctx) => {
-           // console.error("Sign-in Error:", ctx.error);
-            if (ctx.error && ctx.error.message) { //Safely access message
+            // console.error("Sign-in Error:", ctx.error);
+            if (ctx.error && ctx.error.message) {
+              //Safely access message
               setError(ctx.error.message);
-          } else if (typeof ctx.error === 'string') { //Handle string errors
+            } else if (typeof ctx.error === "string") {
+              //Handle string errors
               setError(ctx.error);
-          } else {
+            } else {
               setError("An error occurred during sign-in."); // Generic error message
-          }
+            }
           },
         }
       );
@@ -138,6 +138,7 @@ export default function LoginForm() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               />
+
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
@@ -163,24 +164,24 @@ export default function LoginForm() {
           <div className="flex justify-between">
             <div className="flex items-start">
               <div className="flex items-center h-5">
-                <input
+                {/* <input
                   type="checkbox"
                   id="remember"
                   className="bg-gray-50 border border-gray-300 focus: ring-3 focus:ring-blue-300 h-4 w-4 rounded"
-                />
+                /> */}
               </div>
 
               <div className="text-sm ml-3">
-                <label htmlFor="remember" className="font-medium text-gra-900">
+                {/* <label htmlFor="remember" className="font-medium text-gra-900">
                   Remember me
-                </label>
+                </label> */}
               </div>
             </div>
             <a
-              href="/forget-password"
-              className="text-sm text-blue-700 hover:underline font-medium"
+              href="/login/request-reset"
+              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
             >
-              Lost Password?
+              Forgot your password?
             </a>
           </div>
 

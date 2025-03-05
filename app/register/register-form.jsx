@@ -71,19 +71,19 @@ export default function RegisterForm() {
           onSuccess: (ctx) => {
             // console.log("onSuccesst", ctx);
             //redirect("/login")
-            toast({
-              variant: "success",
-              title: (
-                <div className="flex flex-row">
-                  Registration successful..{" "}
-                  <span className="pl-2">
-                    <FaRegThumbsUp className="text-green-400 h-4 w-4" />
-                  </span>
-                </div>
-              ),
-              description: "Plese continue with login",
+            // toast({
+            //   variant: "success",
+            //   title: (
+            //     <div className="flex flex-row">
+            //       Registration successful..{" "}
+            //       <span className="pl-2">
+            //         <FaRegThumbsUp className="text-green-400 h-4 w-4" />
+            //       </span>
+            //     </div>
+            //   ),
+            //   description: "Plese continue with login",
               
-            });
+            // });
             redirect("/login")
           },
           onError: (ctx) => {
