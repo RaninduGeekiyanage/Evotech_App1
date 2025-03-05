@@ -229,6 +229,7 @@ export default function EditMovieForm({ movie, open, onCancel }) {
                   src={poster}
                   width={120}
                   height={150}
+                  style={{ width: "auto", height: "auto" }}
                   className="height: auto border-3 border-gray-900 shadow-lg"
                   alt="saved image"
                 />

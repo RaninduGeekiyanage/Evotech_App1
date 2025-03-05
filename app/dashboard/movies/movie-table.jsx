@@ -3,63 +3,71 @@ import { Button } from "@/components/ui/button";
 import {
   Table,
   TableBody,
-  TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  TableCell,
 } from "@/components/ui/table";
 import { useState } from "react";
 import EditMovieForm from "./edit-movie-form";
 import DeleteMovieDialog from "./delete-movie-form";
 import Image from "next/image";
+import { SkipBack, SkipForward } from "lucide-react";
 
 export default function MovieTable({ movies }) {
   const [editingMovie, setEditingMovie] = useState(null);
   const [deletingMovie, setDeletingMovie] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(""); // Search state
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 6;
 
+  // Filter movies by title (case insensitive)
+  const filteredMovies = movies.filter((movie) =>
+    movie.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-    // Calculate total pages
-    const totalPages = Math.ceil(movies.length / moviesPerPage);
+  // Calculate total pages based on filtered results
+  const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
 
-    // Get the movies for the current page
-    const indexOfLastMovie = currentPage * moviesPerPage;
-    const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
-    const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie);
-  
-    // Handle next and previous
-    const nextPage = () => {
-      if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-    };
-  
-    const prevPage = () => {
-      if (currentPage > 1) setCurrentPage(currentPage - 1);
-    };
+  // Get the movies for the current page
+  const indexOfLastMovie = currentPage * moviesPerPage;
+  const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
+  const currentMovies = filteredMovies.slice(indexOfFirstMovie, indexOfLastMovie);
 
-  const handleEdit = (movie) => {
-    console.log("edit", movie);
-    setEditingMovie(movie);
+  // Handle next and previous
+  const nextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
   };
 
-  const handleDelete = (movie) => {
-    console.log("Delete", movie);
-    setDeletingMovie(movie);
+  const prevPage = () => {
+    if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
+
+  const handleEdit = (movie) => setEditingMovie(movie);
+  const handleDelete = (movie) => setDeletingMovie(movie);
 
   // Function to handle delete confirmation
   const handleConfirmDelete = (movieId) => {
     console.log("Confirmed delete for movie ID:", movieId);
-    // Perform the delete operation (e.g., API call)
-    setDeletingMovie(null); // Close the dialog after delete
+    setDeletingMovie(null);
   };
 
   return (
     <div>
-    <div>
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Search by title..."
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setCurrentPage(1); // Reset to page 1 when searching
+        }}
+        className="p-2 border rounded mb-4 w-full text-sm"
+      />
+
       <Table>
-        <TableHeader >
+        <TableHeader>
           <TableRow>
             <TableHead className="font-bold">#</TableHead>
             <TableHead className="font-bold">Cover</TableHead>
@@ -67,50 +75,63 @@ export default function MovieTable({ movies }) {
             <TableHead className="font-bold">Year</TableHead>
             <TableHead className="font-bold">Rated</TableHead>
             <TableHead className="font-bold">IMDB</TableHead>
-            <TableHead className="font-bold">languages</TableHead>
+            <TableHead className="font-bold">Languages</TableHead>
             <TableHead className="font-bold">Genres</TableHead>
             <TableHead className="text-end font-bold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {currentMovies.map((movie, index) => (
-            <TableRow key={movie.id}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell><Image src={movie?.poster} alt="Poster" width={60} height={75} style={{ width: "auto", height: "auto" }}/></TableCell>
-              <TableCell>{movie?.title ?? "N/A"}</TableCell>
-              <TableCell>{movie?.year ?? "N/A"}</TableCell>
-              <TableCell>{movie?.rated ?? "N/A"}</TableCell>
-              <TableCell>{movie?.imdb.rating ?? "N/A"}</TableCell>
-              <TableCell>{movie?.languages.join(", ") ?? "N/A"}</TableCell>
-              <TableCell>{movie?.genres.join(", ") ?? "N/A"}</TableCell>
-              <TableCell>
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    className="text-xs border-2 border-yellow-400"
-                    onClick={() => handleEdit(movie)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    className="text-xs"
-                    onClick={() => handleDelete(movie)}
-                  >
-                    Delete
-                  </Button>
-                </div>
+          {currentMovies.length > 0 ? (
+            currentMovies.map((movie, index) => (
+              <TableRow key={movie.id}>
+                <TableCell>{indexOfFirstMovie + index + 1}</TableCell>
+                <TableCell>
+                  <Image
+                    src={movie?.poster}
+                    alt="Poster"
+                    width={50}
+                    height={50}
+                    style={{ width: "auto", height: "auto", maxWidth:"55px" }}
+                  />
+                </TableCell>
+                <TableCell>{movie?.title ?? "N/A"}</TableCell>
+                <TableCell>{movie?.year ?? "N/A"}</TableCell>
+                <TableCell>{movie?.rated ?? "N/A"}</TableCell>
+                <TableCell>{movie?.imdb?.rating ?? "N/A"}</TableCell>
+                <TableCell>{movie?.languages?.join(", ") ?? "N/A"}</TableCell>
+                <TableCell>{movie?.genres?.join(", ") ?? "N/A"}</TableCell>
+                <TableCell>
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant="outline"
+                      className="text-xs border-2 border-yellow-400"
+                      onClick={() => handleEdit(movie)}
+                    >
+                      Edit
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="text-xs"
+                      onClick={() => handleDelete(movie)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan="9" className="text-center p-4">
+                No movies found
               </TableCell>
             </TableRow>
-          ))}
+          )}
         </TableBody>
       </Table>
+
       {editingMovie && (
-        <EditMovieForm
-          movie={editingMovie}
-          open={true}
-          onCancel={() => setEditingMovie(null)}
-        />
+        <EditMovieForm movie={editingMovie} open={true} onCancel={() => setEditingMovie(null)} />
       )}
 
       {deletingMovie && (
@@ -118,22 +139,27 @@ export default function MovieTable({ movies }) {
           movie={deletingMovie}
           open={true}
           onCancel={() => setDeletingMovie(null)}
-          onConfirm={handleConfirmDelete} // Pass function
+          onConfirm={handleConfirmDelete}
         />
       )}
+
+      {/* Pagination */}
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center items-center px-4 py-2 bg-white shadow-md">
+        <Button onClick={prevPage} disabled={currentPage === 1} variant="outline" className="mr-4 border-2">
+          <SkipBack />
+        </Button>
+        <span className="text-sm font-semibold">
+          Page {currentPage} of {totalPages}
+        </span>
+        <Button
+          onClick={nextPage}
+          disabled={currentPage === totalPages || totalPages === 0}
+          variant="outline"
+          className="ml-4"
+        >
+          <SkipForward />
+        </Button>
+      </div>
     </div>
-
-    {/* Fixed footer with pagination buttons */}
-    <div className="fixed bottom-0 left-0 right-0 flex justify-center items-center px-4 py-2 bg-white shadow-md">
-    <Button onClick={prevPage} disabled={currentPage === 1} variant="outline" className="mr-4">
-      Previous
-    </Button>
-    <span className="text-sm font-semibold">Page {currentPage} of {totalPages}</span>
-    <Button onClick={nextPage} disabled={currentPage === totalPages} variant="outline" className="ml-4">
-      Next
-    </Button>
-  </div>
-  </div>
-
   );
 }
