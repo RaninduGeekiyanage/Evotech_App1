@@ -14,7 +14,7 @@ const RegisterPage = async () => {
 
   return (
     // <div className="flex flex-col justify-center items-center min-h-screen text-black">
-    <div className="container mx-auto">
+    <div className="mx-auto bg-neutral-900">
       {/* <RegisterPage />; */}
       <RegisterForm />
     </div>

@@ -106,8 +106,8 @@ export default function RegisterForm() {
     // console.log("Error!", error);
   };
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <Card className="bg-blue-50/90 w-[350px]">
+    <div className="flex justify-center items-center min-h-screen bg-neutral-900">
+      <Card className="w-[350px]">
         <CardHeader>
           <CardTitle className="font-semibold text-xl font-sans text-center">
             Create an Account
@@ -216,7 +216,7 @@ export default function RegisterForm() {
                 Alredy Have an Account?{" "}
                 <Link
                   href="/login"
-                  className="text-green-600  hover:underline font-semibold"
+                  className="text-sky-600  hover:underline font-semibold"
                 >
                   Sign In
                 </Link>
@@ -225,7 +225,7 @@ export default function RegisterForm() {
           </CardContent>
           <CardFooter className="flex justify-center">
             <Button
-              className="flex-1 text-green-400"
+              className="flex-1 text-orange-400 bg-neutral-800 hover:bg-neutral-600"
               type="submit"
               disabled={isLoading}
             >

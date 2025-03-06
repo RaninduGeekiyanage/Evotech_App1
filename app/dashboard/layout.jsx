@@ -1,30 +1,42 @@
 import SidePanel from "./components/side-panel";
 import UserNav from "./components/user-nav";
+import {
+  SidebarProvider,
+  SidebarTrigger,
+  SidebarInset,
+} from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { ThemeToggle } from "@/components/theme-toggle";
+
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div className="flex max-h-screen overflow-hidden bg-gray-100">
-      {/* side pannel */}
-      <aside className="w-64 overflow-y-auto border-r bg-white shadow-lg">
-        <SidePanel />
-      </aside>
-
-      {/* Wrapper */}
-      <div className="bg-gray-500 flex flex-1 flex-col overflow-hidden h-screen">
-        {/* Dashboard Header */}
-        <header className="bg-white flex h-16 items-center justify-between gap-4 border-b px-6 shadow-sm">
-          <h1 className="text-2xl font-bold text-blue-800">Download latest Mflix Movies..</h1>
-          <UserNav />
-        </header>
-        {/* Dashboard pages */}
-        <main className="flex-1 overflow-y-auto bg-gray-100 p-6">
-          
-            {children}
-        
+    <SidebarProvider>
+      <AppSidebar />
+      {/* <DashboardSidebar /> */}
+      <SidebarInset>
+        <main className="p-4">
+          <div className="flex justify-between items-center">
+            <div className="flex flex-row gap-6">
+              <SidebarTrigger />
+              <h1 className="text-2xl font-bold text-blue-800">Download latest Mflix Movies..</h1>
+            </div>           
+            
+              <div className="flex gap-2 items-center">
+                <div>
+                  <ThemeToggle />
+                </div>
+                <div>
+                  <UserNav /> 
+                </div>
+              </div>
+            
+          </div>
+          {children}
         </main>
-      </div>
-    </div>
-  );  
+      </SidebarInset>
+    </SidebarProvider>
+  );
 };
 
 export default DashboardLayout;

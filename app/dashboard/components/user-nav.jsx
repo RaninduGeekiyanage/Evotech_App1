@@ -41,27 +41,24 @@ export default function UserNav() {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+      <DropdownMenuContent className="w-56  bg-slate-200 dark:bg-neutral-900 text-gray-800 dark:text-gray-400"  align="end" forceMount>
+        <DropdownMenuLabel className="font-light">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none text-primary-400">
               {session?.user.name}
             </p>
-            <p className="text-sm font-medium leading-none text-primary-400">
+            <p className="text-xs font-medium leading-none text-primary-400 pt-1">
               {session?.user.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuGroup className="pt-2">
           <DropdownMenuItem>
             <FaRegUserCircle className="mr-2 h-4 w-4 text-primary-400" />
             <span>Profile</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <IoIosSettings className="mr-2 h-4 w-4 text-primary-400" />
-            <span>Setting</span>
-          </DropdownMenuItem>
+          
         </DropdownMenuGroup>
 
         <DropdownMenuItem onClick={handleLogout}>

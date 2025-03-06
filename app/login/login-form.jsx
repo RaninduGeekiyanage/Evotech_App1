@@ -82,18 +82,18 @@ export default function LoginForm() {
 
   return (
     <div className="w-[380px] mx-auto">
-      <div className="bg-white shadow-lg border border-gray-200 rounded-lg p-4">
+      <div className="shadow-lg border rounded-lg p-4">
         <form className="space-y-6 font-sans" onSubmit={handleSubmit}>
           {/* Title */}
-          <h3 className="text-center text-xl font-semibold text-gray-900">
-            Sign in to MFLix
+          <h3 className="text-center text-xl font-semibold text-gray-400">
+            Sign in to Download
           </h3>
 
           {/* Email */}
           <div>
             <label
               htmlFor="email"
-              className="text-sm font-medium text-gray-900 block mb-2 "
+              className="text-sm font-medium text-gray-400 block mb-2 "
             >
               Your Email
             </label>
@@ -105,7 +105,7 @@ export default function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="yourname@email.com"
-              className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+              className="border border-slate-700 rounded-lg text-gray-200 block w-full p-2.5 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-opacity-30"
               autoComplete="off"
             />
 
@@ -124,7 +124,7 @@ export default function LoginForm() {
           <div>
             <label
               htmlFor="password"
-              className="text-sm font-medium text-gray-900 block mb-2"
+              className="text-sm font-medium text-gray-400 block mb-2"
             >
               Your Password
             </label>
@@ -136,7 +136,7 @@ export default function LoginForm() {
                 placeholder="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                className="border border-slate-700 rounded-lg text-gray-200  block w-full p-2.5 focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-opacity-30"
               />
 
               <button
@@ -179,7 +179,7 @@ export default function LoginForm() {
             </div>
             <a
               href="/login/request-reset"
-              className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+              className="ml-auto inline-block text-sm underline-offset-4 hover:underline text-slate-400"
             >
               Forgot your password?
             </a>
@@ -188,7 +188,7 @@ export default function LoginForm() {
           {/* submit button */}
           <button
             type="submit"
-            className="w-full text-green-500 bg-gray-900 hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
+            className="w-full text-orange-500 bg-gray-900 hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 flex items-center justify-center gap-2"
             disabled={isLoading}
           >
             {isLoading && <Loader2 className="animate-spin" />}

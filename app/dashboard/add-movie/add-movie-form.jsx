@@ -148,7 +148,7 @@ export default function AddMovieForm() {
 
   return (
     <div key={key}>
-      <Card className="max-w-2xl mx-auto">
+      <Card className="max-w-2xl mx-auto dark:bg-neutral-900">
         <CardHeader>
           <CardTitle>Add movie</CardTitle>
           <CardDescription>Add a movie to the MFlix database</CardDescription>

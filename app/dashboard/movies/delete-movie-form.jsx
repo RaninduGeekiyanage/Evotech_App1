@@ -36,7 +36,7 @@ export default function DeleteMovieDialog({
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogContent>
+      <DialogContent className="dark:bg-neutral-900">
         <DialogHeader>
           <DialogTitle>Delete Movie</DialogTitle>
           <DialogDescription>

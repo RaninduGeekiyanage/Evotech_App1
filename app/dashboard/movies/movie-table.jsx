@@ -63,7 +63,7 @@ export default function MovieTable({ movies }) {
           setSearchTerm(e.target.value);
           setCurrentPage(1); // Reset to page 1 when searching
         }}
-        className="p-2 border rounded mb-4 w-full text-sm"
+        className="p-2 border rounded mb-4 w-full text-sm focus:outline-none focus:ring-1 focus:ring-orange-500 focus:ring-opacity-30"
       />
 
       <Table>
@@ -83,7 +83,7 @@ export default function MovieTable({ movies }) {
         <TableBody>
           {currentMovies.length > 0 ? (
             currentMovies.map((movie, index) => (
-              <TableRow key={movie.id}>
+              <TableRow key={movie.id} className="text-slate-700 dark:text-slate-400">
                 <TableCell>{indexOfFirstMovie + index + 1}</TableCell>
                 <TableCell>
                   <Image
@@ -104,14 +104,14 @@ export default function MovieTable({ movies }) {
                   <div className="flex justify-end space-x-2">
                     <Button
                       variant="outline"
-                      className="text-xs border-2 border-yellow-400"
+                      className="text-xs border-2 border-yellow-300 dark:hover:bg-yellow-500 dark:hover:text-slate-800"
                       onClick={() => handleEdit(movie)}
                     >
                       Edit
                     </Button>
                     <Button
-                      variant="destructive"
-                      className="text-xs"
+                      variant="outline"
+                      className="text-xs border-2 border-orange-500 dark:hover:bg-orange-500 dark:hover:text-slate-800"
                       onClick={() => handleDelete(movie)}
                     >
                       Delete
@@ -144,18 +144,18 @@ export default function MovieTable({ movies }) {
       )}
 
       {/* Pagination */}
-      <div className="fixed bottom-0 left-0 right-0 flex justify-center items-center px-4 py-2 bg-white shadow-md">
-        <Button onClick={prevPage} disabled={currentPage === 1} variant="outline" className="mr-4 border-2">
+      <div className="fixed bottom-0 left-0 right-0 flex justify-center items-center px-4 py-2 shadow-md">
+        <Button onClick={prevPage} disabled={currentPage === 1} variant="outline" className="mr-4 border-2 hover:bg-slate-400 dark:hover:bg-orange-500">
           <SkipBack />
         </Button>
-        <span className="text-sm font-semibold">
+        <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
           Page {currentPage} of {totalPages}
         </span>
         <Button
           onClick={nextPage}
           disabled={currentPage === totalPages || totalPages === 0}
           variant="outline"
-          className="ml-4"
+          className="ml-4 hover:bg-slate-400 dark:hover:bg-orange-500"
         >
           <SkipForward />
         </Button>

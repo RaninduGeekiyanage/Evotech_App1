@@ -147,7 +147,7 @@ export default function EditMovieForm({ movie, open, onCancel }) {
 
   return (
     <Dialog open={open} onOpenChange={onCancel}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl  dark:bg-neutral-900">
         <DialogHeader>
           <DialogTitle>Edit Movie</DialogTitle>
           <DialogDescription>Update the Selected Movie</DialogDescription>

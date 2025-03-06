@@ -17,10 +17,10 @@ export default async function MovieForm() {
   return (
     <div className="space-y-4 my-10">
       <div className="flex flex-row justify-between items-center px-4 md:px-40">
-        <h1 className="text-lg">Browse Movies</h1>
+        <h1 className=" text-gray-500 text-2xl">Browse Movies</h1>
         <div className="flex justify-end">
           <Link href="/dashboard/movies">
-            <Button variant="outline" className="mr-4">
+            <Button variant="outline" className="border-2 border-slate-600 dark:hover:bg-slate-700 mr-4">
               <LayoutDashboard />
               Go to Dashboard
             </Button>
