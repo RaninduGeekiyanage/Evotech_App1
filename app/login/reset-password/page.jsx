@@ -42,7 +42,8 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-48 p-6 border rounded-lg shadow">
+    <div className="max-w-md mx-auto mt-48 p-6 border rounded-lg shadow bg-neutral-900">
+      <div className="m-6">  
       <h2 className="text-lg font-bold">Reset Password</h2>
       {message && <p className="mt-2 text-sm text-red-500">{message}</p>}
       <form onSubmit={handleSubmit} className="mt-4">
@@ -58,6 +59,7 @@ export default function ResetPasswordPage() {
           Reset Password
         </button>
       </form>
+    </div>
     </div>
   );
 }

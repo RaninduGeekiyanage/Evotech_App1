@@ -14,8 +14,9 @@ export default function RequestResetPage() {
   };
 
   return (
-    <div className="max-w-md pt-4 mx-auto mt-44 border rounded-lg shadow">
-      <h2 className="text-lg font-bold">Forgot Password?</h2>
+    <div className="max-w-md pt-4 mx-auto mt-44 border rounded-lg shadow bg-neutral-900">
+      <div className="m-6">      
+      <h2 className="text-lg font-bold p-5">Forgot Password?</h2>
       {message && <p className="mt-2 text-sm text-red-500">{message}</p>}
       <form onSubmit={handleSubmit} className="mt-4">
         <input
@@ -30,6 +31,7 @@ export default function RequestResetPage() {
           Send Reset Link
         </button>
       </form>
-    </div>
+      </div>
+    </div>  
   );
 }
