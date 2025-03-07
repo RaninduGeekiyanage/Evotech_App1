@@ -49,7 +49,7 @@ const items = [
   },
   {
     title: "Profile",
-    url: "#",
+    url: "/dashboard/profile",
     icon: RiAccountPinCircleFill,
   },
 ]

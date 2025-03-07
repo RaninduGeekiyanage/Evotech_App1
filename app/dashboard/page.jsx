@@ -9,9 +9,9 @@ import { MovieGenereCategoryPieChart } from "./dashboard-component/genere-pie-ch
 
 export const page = () => {
   return (
-    <div className="flex flex-col items-center min-h-screen text-black bg-slate-900 bg-[url('/dark2.jpg')] bg-cover bg-center relative">
+    <div className="flex flex-col items-center min-h-screen text-black dark:bg-slate-900 dark:bg-[url('/dark2.jpg')] dark:bg-cover dark:bg-center relative">
       {/* Background overlay */}
-      <div className="absolute inset-0 bg-black opacity-80 z-10"></div>
+      <div className="absolute inset-0 dark:bg-black opacity-80 z-10"></div>
       <div className="container relative z-20"> {/* Ensure this is above the overlay */}
         <div className="flex flex-col md:flex-row justify-between mt-12 gap-2">
           <Suspense fallback={<Loader className="animate-spin duration-1000 text-green-500 text-3xl text-center z-10" />}>

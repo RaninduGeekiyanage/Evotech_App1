@@ -15,12 +15,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { IoPersonCircleSharp } from "react-icons/io5";
 
 // connect the user session from useSession
 export default function UserNav() {
   const { data: session } = useSession();
   //console.log(session);
-
+  
   const handleLogout = async () => {
     await signOut({
       fetchOptions: {
@@ -37,7 +38,7 @@ export default function UserNav() {
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10 border-2 border-blue-500">
             <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback><IoPersonCircleSharp /></AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>

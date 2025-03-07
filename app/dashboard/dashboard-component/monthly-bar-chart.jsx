@@ -59,7 +59,7 @@ export function MonthlyJobChart() {
               tickFormatter={(value) => `${value}`}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Bar dataKey="count" fill="hsl(210, 70%, 50%)" radius={8}>
+            <Bar dataKey="count" fill="hsl(30, 70%, 50%)" radius={8}>
               <LabelList
                 dataKey="count"
                 position="top"

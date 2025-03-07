@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Card,
   CardContent,
@@ -16,14 +15,9 @@ import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
 import Link from "next/link";
 import { useState } from "react";
-//import { registerUser } from "@/lib/apis/server";
-
-// import { ToastAction } from "@/components/ui/toast";
-import { FaRegThumbsUp } from "react-icons/fa";
-
+import showToast from "@/components/showToast";
 import { signUp } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
-import { toast } from "sonner";
 
 const DEFAULT_ERROR = {
   error: false,
@@ -44,6 +38,16 @@ export default function RegisterForm() {
   const toggleConfirmPasswordVisibility = () => {
     setShowConfirmPassword((prev) => !prev);
   };
+
+  const validatePassword = (password) => {
+    const hasMinimumLength = password.length >= 6;
+    const hasNumbers = /\d/.test(password);
+    const hasLetters = /[a-zA-Z]/.test(password);
+    const hasSpecialCharacters = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    return hasMinimumLength && hasNumbers && hasLetters && hasSpecialCharacters;
+  };
+
+
   const handleSubmitForm = async (event) => {
     event?.preventDefault();
     const formData = new FormData(event?.currentTarget);
@@ -51,6 +55,12 @@ export default function RegisterForm() {
     const email = formData.get("email").toString() ?? "";
     const password = formData.get("password").toString() ?? "";
     const confirmPassword = formData.get("confirm-password") ?? "";
+
+
+    if (!validatePassword(password)) {
+      setError({error: true, message: "Password must be at least 6 characters long, and include numbers, letters, and special characters."});
+      return;
+    }   
 
     // if (name && email && password && confirmPassword) {
     if (password === confirmPassword) {
@@ -68,22 +78,9 @@ export default function RegisterForm() {
           onRequest: () => {
             //console log("onRequest", ctx);
           },
-          onSuccess: (ctx) => {
-            // console.log("onSuccesst", ctx);
-            //redirect("/login")
-            // toast({
-            //   variant: "success",
-            //   title: (
-            //     <div className="flex flex-row">
-            //       Registration successful..{" "}
-            //       <span className="pl-2">
-            //         <FaRegThumbsUp className="text-green-400 h-4 w-4" />
-            //       </span>
-            //     </div>
-            //   ),
-            //   description: "Plese continue with login",
+          onSuccess: (ctx) => {     
               
-            // });
+            showToast("Account Create successfull", "success")    
             redirect("/login")
           },
           onError: (ctx) => {
@@ -96,14 +93,14 @@ export default function RegisterForm() {
       );
       setIsLoading(false);
       if (data) {
-        console.log("data:", data);
+        //console.log("data:", data);
       }
     } else {
       setError({ error: true, message: "Password dosn't match..!" });
-      toast.error(message)
+      showToast(error.message, "error")  
+      
     }
-    // }
-    // console.log("Error!", error);
+ 
   };
   return (
     <div className="flex justify-center items-center min-h-screen bg-neutral-900">
