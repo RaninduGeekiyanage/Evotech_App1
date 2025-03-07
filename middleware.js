@@ -26,5 +26,6 @@ export default async function authMiddleware(request) {
 }
 
 export const config = {
+  // added "/" to cover the all route
   matcher: ["/login", "/dashboard/:path*", "/"], // Apply middleware to /login, any /dashboard subpath, and / route
 };
